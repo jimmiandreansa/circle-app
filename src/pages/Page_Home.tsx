@@ -43,7 +43,7 @@ const Page_Home = (): React.JSX.Element => {
           key={thread.id}
           thread={thread}
           isProfile={false}
-          userId={thread.userId}
+          userId={thread.userId as number}
           isReply={false}
         />
       ))}

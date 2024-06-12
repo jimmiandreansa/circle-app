@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { IProfile, IUser } from "@/type/app";
+import { IProfile } from "@/type/app";
 import { loginAsync, getProfileAsync, registerAsync} from "../async/auth";
 
 interface IAuthState {
@@ -43,19 +43,6 @@ export const counterSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
     },
-    // SET_AUTH_CHECK: (_, action) => {
-    //   const payload = action.payload;
-    //   console.log("INI PAYLOAD", payload)
-
-    //   const user: IUser = {
-    //     id: payload.id,
-    //     fullname: payload.full_name,
-    //     username: payload.username,
-    //     email: payload.email,
-    //   };
-
-    //   return user;
-    // },
     SET_AUTH_ERROR: () => {
       localStorage.removeItem("token");
       // state.user = undefined;

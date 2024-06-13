@@ -134,7 +134,10 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
 
   return (
     <>
-      <Flex alignItems={"center"} width={"100%"}>
+      <Flex
+        alignItems={"center"}
+        width={"100%"}
+      >
         <Avatar
           src={profile?.avatar ? profile?.avatar : ""}
           minWidth={"42px"}

@@ -1,22 +1,34 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { Box } from "@chakra-ui/react";
+import { Box, useBreakpointValue } from "@chakra-ui/react";
 import Component_Sidebar from "@/components/Component_Sidebar";
 import Component_ProfileSide from "@/components/Component_ProfileRightSide";
 import Component_Suggested from "@/components/Component_Suggested";
+import Component_SidebarMobile from "@/components/Component_SidebarMobile";
 
 interface LayoutProps {
   isFull: boolean;
 }
 
 const Layout: React.FC<LayoutProps> = ({ isFull }): React.ReactElement => {
+  const isLargeScreen = useBreakpointValue({ base: false, md: false, lg: true });
+
   return (
-    <Box bg={"brand.900"}>
-      <Component_Sidebar />
-      <Box marginLeft="22%" width="45%">
+    <Box
+      bg={"brand.900"}
+      padding={0}
+      display="flex"
+      flexDirection={["column", null, "row"]}
+    >
+      <Box>
+        {isLargeScreen ? <Component_Sidebar /> : <Component_SidebarMobile />}
+      </Box>
+      <Box marginLeft={["60px", "null", "22%"]} width={["100%", "100%", "45%"]}>
         <Outlet />
       </Box>
-      {isFull ? <Component_ProfileSide /> : <Component_Suggested />}
+      <Box display={isLargeScreen ? "block" : "none"}>
+        {isFull ? <Component_ProfileSide /> : <Component_Suggested />}
+      </Box>
     </Box>
   );
 };

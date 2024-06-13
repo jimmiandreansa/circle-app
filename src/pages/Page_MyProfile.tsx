@@ -41,7 +41,7 @@ const Page_MyProfile: FC = (): React.JSX.Element => {
   }, []);
 
   return (
-    <Box minHeight={"100vh"}>
+    <Box minHeight={"100vh"} bg={"brand.900"}>
       <Box padding="16px 16px 4px">
         <Heading
           color="white"

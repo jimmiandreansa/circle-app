@@ -46,7 +46,7 @@ const Page_Search = () => {
   };
 
   return (
-    <Box minHeight={"100vh"}>
+    <Box minHeight={"100vh"} bg={"brand.900"}>
       <Box padding="24px 16px 4px">
         <InputGroup marginBottom={"20px"}>
           <InputLeftElement pointerEvents="none" paddingLeft="12px">

@@ -15,6 +15,7 @@ import {
   Grid,
   GridItem,
   Avatar,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import ImageIcon from "../../assets/iconsSvg/ImageIcon";
@@ -22,6 +23,7 @@ import { createThread } from "@/libs/api/call/thread";
 import { useAppSelector } from "@/store";
 import { useAppDispatch } from "@/store";
 import { getThreadAsync } from "@/store/async/thread";
+import { IoAddCircleOutline } from "react-icons/io5";
 
 interface IThreadPostProps {
   threadId?: number;
@@ -32,6 +34,12 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
   threadId,
   callback,
 }) => {
+  const isLargeScreen = useBreakpointValue({
+    base: false,
+    md: false,
+    lg: true,
+  });
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
@@ -89,9 +97,6 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
     console.log("berhasil post");
     e.preventDefault();
     try {
-
-      console.log("INI FORM INPUT", formInput);
-
       if (threadId) {
         formInput.threadId = threadId;
       }
@@ -120,17 +125,26 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
 
   return (
     <>
-      <Button
-        borderRadius="30px"
-        fontSize="18px"
-        bg="#00a013"
-        color="white"
-        _hover={{ bg: "#028311" }}
-        onClick={onOpen}
-      >
-        Create Post
-      </Button>
-
+      {isLargeScreen ? (
+        <Button
+          borderRadius="30px"
+          fontSize="18px"
+          bg="#00a013"
+          color="white"
+          _hover={{ bg: "#028311" }}
+          onClick={onOpen}
+        >
+          Create Post
+        </Button>
+      ) : (
+        <IoAddCircleOutline
+          fontSize="28px"
+          color="white"
+          onClick={onOpen}
+          display={"flex"}
+          fontWeight={"semibold"}
+        />
+      )}
       <Modal
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
@@ -145,11 +159,7 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
             <form onSubmit={handlePost} encType="multipart/form-data">
               <Flex mb={4}>
                 <Avatar
-                  src={
-                    profile?.avatar
-                      ? profile?.avatar
-                      : ""
-                  }
+                  src={profile?.avatar ? profile?.avatar : ""}
                   minWidth={"42px"}
                   maxWidth={"42px"}
                   minHeight={"42px"}
@@ -214,10 +224,7 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
               <Flex mt={4}>
                 <Grid gridTemplateColumns={"repeat(4, 1fr)"} gap={2}>
                   {previewImages?.map((img, index: number) => (
-                    <GridItem
-                      key={index}
-                      h={"100%"}
-                    >
+                    <GridItem key={index} h={"100%"}>
                       <Image
                         key={index}
                         rounded={"md"}

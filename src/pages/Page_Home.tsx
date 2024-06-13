@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import nav from "../../src/css/home.module.css";
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, useBreakpointValue } from "@chakra-ui/react";
 import Component_ThreadCard from "@/components/Component_ThreadCard";
 import Component_ThreadPost from "@/components/Component_ThreadPost";
 import { getThreadAsync } from "@/store/async/thread";
 import { useAppDispatch, useAppSelector } from "@/store";
 
 const Page_Home = (): React.JSX.Element => {
+  const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   const threads = useAppSelector((state) => state.thread.threads)
 
   const dispatch = useAppDispatch();
@@ -15,11 +16,12 @@ const Page_Home = (): React.JSX.Element => {
     dispatch(getThreadAsync());
   }, []);
   return (
-    <Box minHeight="100vh">
+    <Box minHeight="100vh" bg={"brand.900"}>
       <div className={nav.navv}>
         <Box
+          height={isLargeScreen ? "128px" : "76px"}
           borderBottom={"1px solid #424242"}
-          height="128px"
+          borderLeft={{ base: "1px solid #424242", md: "none" }}
           padding="16px"
           pos="relative"
           position={"static"}
@@ -27,6 +29,7 @@ const Page_Home = (): React.JSX.Element => {
           zIndex={"9999"}
         >
           <Heading
+            display={isLargeScreen ? "block" : "none"}
             color="white"
             fontSize="24px"
             marginTop="8px"

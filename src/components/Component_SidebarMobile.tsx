@@ -1,9 +1,5 @@
-import { Box, Flex, Text, Link, Image } from "@chakra-ui/react";
+import { Box, Flex, Link, Image } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { BiLogOut } from "react-icons/bi";
-import { BsPersonCircle } from "react-icons/bs";
-import { FaHome, FaRegHeart } from "react-icons/fa";
-import { MdPersonSearch } from "react-icons/md";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { useAppDispatch } from "@/store";
@@ -11,28 +7,25 @@ import { SET_LOGOUT } from "@/store/slice/auth";
 import PostThreadModal from "./Modals/Modal_PostThread";
 import { getThreads } from "@/libs/api/call/thread";
 import { IThread } from "@/type/app";
+import { IoHeartOutline, IoHomeOutline, IoLogOutOutline, IoPersonOutline, IoSearchOutline } from "react-icons/io5";
 
-const Component_Sidebar = (): React.JSX.Element => {
+const Component_SidebarMobile = (): React.JSX.Element => {
   const MENU = [
     {
-      title: "Home",
       link: "/",
-      icon: <FaHome />,
+      icon: <IoHomeOutline />,
     },
     {
-      title: "Search",
       link: "/search",
-      icon: <MdPersonSearch />,
+      icon: <IoSearchOutline />,
     },
     {
-      title: "Follow",
       link: "/follow",
-      icon: <FaRegHeart />,
+      icon: <IoHeartOutline />,
     },
     {
-      title: "Profile",
       link: `/my-profile`,
-      icon: <BsPersonCircle />,
+      icon: <IoPersonOutline />,
     },
   ];
 
@@ -64,21 +57,15 @@ const Component_Sidebar = (): React.JSX.Element => {
   return (
     <Box
       bg={"brand.900"}
-      width={"22%"}
       position={"fixed"}
-      paddingLeft={"24px"}
-      paddingRight={"24px"}
-      paddingTop={"16px"}
+      padding={"16px"}
       height={"100vh"}
       borderRight={"1px solid #424242"}
     >
-      <Flex flexDir="column" gap={4}>
+      <Flex flexDir="column" gap={6}>
         <ChakraLink
           as={ReactRouterLink}
           to="/"
-          ml={"12px"}
-          display={"flex"}
-          gap={2}
           alignItems={"center"}
           fontWeight={"bold"}
           color="#028311"
@@ -86,48 +73,43 @@ const Component_Sidebar = (): React.JSX.Element => {
           _hover={{ textDecoration: "none" }}
         >
           <Image
-            boxSize="48px"
+            boxSize="28px"
             src="../../src/assets/images/circle.png"
             alt="Circle Logo"
           />
-          circle
         </ChakraLink>
         {MENU.map((menu) => (
           <ChakraLink
-            key={menu.title}
+            key={menu.link}
             as={ReactRouterLink}
             to={menu.link}
-            ml={"12px"}
             display={"flex"}
             alignItems={"center"}
             fontWeight={"semibold"}
-            fontSize={"18px"}
+            fontSize={"28px"}
             color={"white"}
             _hover={{ color: "#949494" }}
           >
             {menu.icon}
-            <Text marginLeft={"8px"}>{menu.title}</Text>
           </ChakraLink>
         ))}
         <PostThreadModal callback={getThread} />
       </Flex>
       <Box position={"absolute"} bottom={"32px"}>
         <Link
-          ml={"12px"}
           display={"flex"}
           alignItems={"center"}
           fontWeight={"semibold"}
-          fontSize={"18px"}
+          fontSize={"28px"}
           color={"white"}
           _hover={{ color: "#949494" }}
           onClick={handleLogout}
         >
-          <BiLogOut />
-          <Text marginLeft={"8px"}>Logout</Text>
+          <IoLogOutOutline />
         </Link>
       </Box>
     </Box>
   );
 };
 
-export default Component_Sidebar;
+export default Component_SidebarMobile;

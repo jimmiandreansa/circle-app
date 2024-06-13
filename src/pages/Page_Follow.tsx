@@ -14,7 +14,7 @@ import Component_Follower from "@/components/Component_Follower";
 
 const Page_Follow = () => {
   return (
-    <Box minHeight={"100vh"}>
+    <Box minHeight={"100vh"} bg={"brand.900"}>
       <div className={nav.navv}>
         <Box
           height="128px"

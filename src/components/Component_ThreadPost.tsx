@@ -12,7 +12,7 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Text,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -44,6 +44,9 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
   );
 
   const [visible, setVisible] = useState(false);
+
+  console.log(isComment)
+  console.log(visible)
 
   useEffect(() => {
     if (errorMessage) {
@@ -132,26 +135,32 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
     });
   };
 
+  const height = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
+  const width = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
+  const marginRight = useBreakpointValue({
+    base: "12px",
+    md: "16px",
+    lg: "20px",
+  });
+
   return (
     <>
-      <Flex
-        alignItems={"center"}
-        width={"100%"}
-      >
+      <Flex alignItems={"center"} width={"100%"}>
         <Avatar
           src={profile?.avatar ? profile?.avatar : ""}
-          minWidth={"42px"}
-          maxWidth={"42px"}
-          minHeight={"42px"}
-          maxHeight={"42px"}
           objectFit={"cover"}
           borderRadius={"50%"}
-          marginRight={"20px"}
+          style={{ height, width, marginRight }}
         />
         <form
           onSubmit={handlePost}
           encType="multipart/form-data"
-          style={{ display: "flex", width: "100%", alignItems: "center" }}
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "36px",
+            alignItems: "center",
+          }}
         >
           <FormControl>
             <Input
@@ -161,6 +170,8 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
               placeholder="Type here..."
               resize={"none"}
               name="content"
+              height={"20px"}
+              fontSize={{ base: "14px", md: "16px" }}
               border="none"
               focusBorderColor={"transparent"}
               value={formInput.content}
@@ -232,6 +243,7 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
                 type="file"
                 multiple
                 max={4}
+                height={"10px"}
                 color="white"
                 style={{ display: "none" }}
                 placeholder="Your image..."
@@ -248,9 +260,12 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
                 type="submit"
                 bg="#00a013"
                 borderRadius="30px"
-                width={"102px"}
+                width={"100%"}
                 color="white"
+                size={{ base: "sm", md: "md" }}
+                // padding={"0px, 12px"}
                 _hover={{ bg: "#028311" }}
+                // style={{fontSize}}
               >
                 {loading ? (
                   <HashLoader color={"#fff"} loading={loading} size={24} />
@@ -262,7 +277,7 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
           </Flex>
         </form>
       </Flex>
-      {isComment ? null : (
+      {/* {isComment ? null : (
         <Box>
           {visible ? (
             <Text ml={"60px"} mt={-1} fontSize={"14px"} color={"red"}>
@@ -270,7 +285,7 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
             </Text>
           ) : null}
         </Box>
-      )}
+      )} */}
     </>
   );
 };

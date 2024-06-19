@@ -1,5 +1,5 @@
 import { IThread } from "@/type/app";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import Component_LikeButton from "./Buttons/Component_LikeButton";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
@@ -65,12 +65,21 @@ const Component_ThreadCard: React.FC<IThreadCardProps> = ({
     }
   }, []);
 
+  const height = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
+  const width = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
+  const padding = useBreakpointValue({ base: "12px", md: "14px", lg: "16px" });
+  const marginRight = useBreakpointValue({
+    base: "12px",
+    md: "16px",
+    lg: "20px",
+  });
+
   return (
     <Flex
       borderBottom={"1px solid #424242"}
-      color="white"
-      padding="16px"
       width="100%"
+      color={"white"}
+      style={{ padding }}
     >
       <Image
         src={
@@ -78,15 +87,11 @@ const Component_ThreadCard: React.FC<IThreadCardProps> = ({
             ? thread.author?.profile?.avatar
             : "https://www.iprcenter.gov/image-repository/blank-profile-picture.png/@@images/image.png"
         }
-        minWidth="42px"
-        maxWidth="42px"
-        minHeight="42px"
-        maxHeight="42px"
         objectFit={"cover"}
         borderRadius={"50%"}
-        marginRight={"20px"}
         cursor={isReply ? "default" : "pointer"}
         onClick={threadAuthorDetailFunc}
+        style={{ height, width, marginRight }}
       />
       <Box width={"100%"}>
         <Flex alignItems={"center"} justifyContent="space-between">
@@ -94,18 +99,35 @@ const Component_ThreadCard: React.FC<IThreadCardProps> = ({
             cursor={isReply ? "default" : "pointer"}
             onClick={threadAuthorDetailFunc}
           >
-            <Text fontWeight="semibold">{thread.author?.fullname}</Text>
-            <Text ms="2" color="grey">
-              @{thread.author?.username}
-            </Text>
-            <Text ms="2" color="grey">
-              •{" "}
-              {thread.create
-                ? formatDistanceToNow(new Date(thread.create), {
-                    addSuffix: false,
-                  }).replace("about", "")
-                : ""}
-            </Text>
+            <Flex flexDir={{ base: "column" , md: "row"}}>
+              <Text
+                fontWeight="semibold"
+                fontSize={{ base: "15px", md: "16px", lg: "16px" }}
+              >
+                {thread.author?.fullname}
+              </Text>
+              <Flex>
+                <Text
+                  ms={{ base: 0, md: "2" }}
+                  color="grey"
+                  fontSize={{ base: "15px", md: "16px", lg: "16px" }}
+                >
+                  @{thread.author?.username}
+                </Text>
+                <Text
+                  ms="2"
+                  color="grey"
+                  fontSize={{ base: "15px", md: "16px", lg: "16px" }}
+                >
+                  •{" "}
+                  {thread.create
+                    ? formatDistanceToNow(new Date(thread.create), {
+                        addSuffix: false,
+                      }).replace("about", "")
+                    : ""}
+                </Text>
+              </Flex>
+            </Flex>
           </Flex>
           <Flex>
             {isProfile && userId === myId ? (
@@ -114,7 +136,11 @@ const Component_ThreadCard: React.FC<IThreadCardProps> = ({
           </Flex>
         </Flex>
         <Box onClick={threadDetailFunc}>
-          <Text fontSize="15px" mb={0} cursor={isReply ? "default" : "pointer"}>
+          <Text
+            mb={0}
+            cursor={isReply ? "default" : "pointer"}
+            fontSize={{ base: "14px", md: "15px", lg: "15px" }}
+          >
             {thread.content}
           </Text>
           <div

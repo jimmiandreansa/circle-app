@@ -8,25 +8,29 @@ import { useAppDispatch, useAppSelector } from "@/store";
 
 const Page_Home = (): React.JSX.Element => {
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
-  const threads = useAppSelector((state) => state.thread.threads)
+  const threads = useAppSelector((state) => state.thread.threads);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getThreadAsync());
   }, []);
+
+  const padding = useBreakpointValue({ base: "12px", md: "14px", lg: "16px" });
+
   return (
     <Box minHeight="100vh" bg={"brand.900"}>
       <div className={nav.navv}>
         <Box
-          height={isLargeScreen ? "128px" : "76px"}
+          // height={isLargeScreen ? "128px" : "76px"}
           borderBottom={"1px solid #424242"}
           borderLeft={{ base: "1px solid #424242", md: "none" }}
-          padding="16px"
+          // padding="10px"
           pos="relative"
           position={"static"}
           bg={"#1d1d1d"}
           zIndex={"9999"}
+          style={{padding}}
         >
           <Heading
             display={isLargeScreen ? "block" : "none"}

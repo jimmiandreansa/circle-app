@@ -42,10 +42,12 @@ const Page_ThreadDetail = (): React.JSX.Element => {
   }, [threadId]);
 
   return (
-    <Box minHeight={"100vh"}>
+    <Box minHeight={"100vh"} bg={"brand.900"}>
       <div className={nav.navv}>
         <Box
-          padding="16px 16px 4px"
+          padding={{ sm: "16px 16px 8px", lg: "16px 16px 4px"}}
+          borderLeft={{ base: "1px solid #424242", md: "none" }}
+          borderBottom={{ base: "1px solid #424242", md: "none" }}
           pos="relative"
           position={"static"}
           bg={"#1d1d1d"}
@@ -54,7 +56,7 @@ const Page_ThreadDetail = (): React.JSX.Element => {
           <Heading
             color="white"
             fontSize="24px"
-            marginTop="8px"
+            marginTop={{ sm: "none", lg: "8px"}}
             fontWeight="semibold"
             display="flex"
             alignItems="center"

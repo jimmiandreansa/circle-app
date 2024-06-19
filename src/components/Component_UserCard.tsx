@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
 import Component_FollowButton from "./Buttons/Component_FollowButton";
 import { useNavigate } from "react-router-dom";
 
@@ -18,6 +18,9 @@ const Component_UserCard: React.FC<IUserCardProps> = ({
 
   const navigate = useNavigate()
 
+  const height = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
+  const width = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
+
   return (
     <Box
       display="flex"
@@ -27,11 +30,10 @@ const Component_UserCard: React.FC<IUserCardProps> = ({
     >
       <Flex gap={4}>
         <Avatar
-          width="42px"
-          height="42px"
           cursor="pointer"
           src={avatar}
           onClick={() => navigate(`../profile/${followingId}`)}
+          style={{height, width}}
         />
         <Box display="flex" flexDir="column">
           <Text fontWeight="semibold" color="white" fontSize="14px">

@@ -4,6 +4,7 @@ import {
   Flex,
   FormControl,
   Heading,
+  Image,
   Input,
   Text,
 } from "@chakra-ui/react";
@@ -18,7 +19,14 @@ const Page_ResetPassword = () => {
         justifyContent="center"
         margin="auto"
       >
-        <Heading color="#00a013">circle</Heading>
+        <Heading color="#00a013" display={"flex"} gap={1} alignItems={"center"}>
+          <Image
+            boxSize="28px"
+            src="https://gcdnb.pbrd.co/images/IjucgOcWuO1g.png?o=1"
+            alt="Circle Logo"
+          />
+          circle
+        </Heading>
         <Text color="white" fontSize={"20px"} marginBottom={3}>
           Reset password
         </Text>

@@ -74,7 +74,7 @@ const Component_SidebarMobile = (): React.JSX.Element => {
         >
           <Image
             boxSize="28px"
-            src="../../src/assets/images/circle.png"
+            src="https://gcdnb.pbrd.co/images/IjucgOcWuO1g.png?o=1"
             alt="Circle Logo"
           />
         </ChakraLink>

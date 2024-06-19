@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Image, Input, Text } from "@chakra-ui/react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { useState } from "react";
@@ -49,7 +49,14 @@ const Page_Register = () => {
         justifyContent="center"
         margin="auto"
       >
-        <Heading color="#00a013">circle</Heading>
+        <Heading color="#00a013" display={"flex"} gap={1} alignItems={"center"}>
+          <Image
+            boxSize="28px"
+            src="https://gcdnb.pbrd.co/images/IjucgOcWuO1g.png?o=1"
+            alt="Circle Logo"
+          />
+          circle
+        </Heading>
         <Text color="white" fontSize={"20px"} marginBottom={3}>
           Create account Circle
         </Text>

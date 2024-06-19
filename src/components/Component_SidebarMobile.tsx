@@ -27,6 +27,10 @@ const Component_SidebarMobile = (): React.JSX.Element => {
       link: `/my-profile`,
       icon: <IoPersonOutline />,
     },
+    // {
+    //   link: "",
+    //   icon: <IoLogOutOutline />,
+    // },
   ];
 
   const [threads, setThreads] = useState<IThread[] | []>([]);
@@ -93,21 +97,20 @@ const Component_SidebarMobile = (): React.JSX.Element => {
             {menu.icon}
           </ChakraLink>
         ))}
+
         <PostThreadModal callback={getThread} />
-      </Flex>
-      <Box position={"absolute"} bottom={"32px"}>
         <Link
           display={"flex"}
           alignItems={"center"}
           fontWeight={"semibold"}
           fontSize={"28px"}
-          color={"white"}
-          _hover={{ color: "#949494" }}
+          color={"#f31f1f"}
+          _hover={{ color: "#f52f5f" }}
           onClick={handleLogout}
         >
           <IoLogOutOutline />
         </Link>
-      </Box>
+      </Flex>
     </Box>
   );
 };

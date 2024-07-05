@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getMyProfile, getProfileById } from "@/libs/api/call/profile";
+import { getMyProfile, getProfileById, updatedProfile } from "@/libs/api/call/profile";
 import { useParams } from "react-router-dom";
 
 export const getMyProfileAsync = createAsyncThunk(
@@ -28,3 +28,22 @@ export const getProfileByIdAsync = createAsyncThunk(
     }
   }
 );
+
+export const updateProfileAsync = createAsyncThunk(
+  "profile/updateProfile",
+  async (
+    body: {
+      username: string;
+      fullname: string;
+      bio: string | null;
+      avatar: File | null | string;
+      cover: File | null | string;
+    }
+  ) => {
+    try {
+      await updatedProfile(body)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+)

@@ -2,6 +2,5 @@
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  color: "blue";
-  background-color: aqua;
+  z-index: 1;
 }

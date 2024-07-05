@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/store";
+import { RootState, useAppDispatch, useAppSelector } from "@/store";
 import {
   Avatar,
   Box,
@@ -24,6 +24,7 @@ import { getProfileAsync } from "@/store/async/auth";
 import { getThreadAsync } from "@/store/async/thread";
 import { getMyProfileAsync } from "@/store/async/profile";
 import { FiEdit } from "react-icons/fi";
+import HashLoader from "react-spinners/HashLoader";
 
 const Modal_EditProfile: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -32,6 +33,10 @@ const Modal_EditProfile: React.FC = () => {
 
   const profile = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
+
+  const { loading } = useAppSelector((state: RootState) => state.profile);
+
+  console.log("ini lpading", loading);
 
   const [updateProfile, setUpdateProfile] = useState<{
     username: string;
@@ -49,7 +54,7 @@ const Modal_EditProfile: React.FC = () => {
 
   const [imageCoverPreview, setImageCoverPreview] = useState<
     string | undefined
-    >();
+  >();
   console.log(imageCoverPreview);
   const [imageAvatarPreview, setImageAvatarPreview] = useState<
     string | undefined
@@ -118,13 +123,17 @@ const Modal_EditProfile: React.FC = () => {
         size={"xl"}
       >
         <ModalOverlay />
-        <ModalContent bg="#424242" borderRadius={"12px"}>
-          <ModalHeader color="white">Edit Profile</ModalHeader>
+        <ModalContent bg="#424242" borderRadius={"12px"} width={"80%"}>
+          <ModalHeader color="white" padding={{ base: "16px", md: "24px" }}>
+            Edit Profile
+          </ModalHeader>
           <ModalCloseButton color="white" />
-          <ModalBody pb={6}>
+          <ModalBody
+            padding={{ base: "0px 16px 16px 16px", md: "0px 24px 24px 24px" }}
+          >
             <Box position="relative">
               <FormControl>
-                <FormLabel position={"relative"}>
+                <FormLabel position={"relative"} margin={0}>
                   <Image
                     src={
                       profile?.cover
@@ -133,11 +142,17 @@ const Modal_EditProfile: React.FC = () => {
                     }
                     objectFit={"cover"}
                     borderRadius="12px"
-                    height="120px"
+                    height={{ base: "100px", md: "120px" }}
                     width="100%"
                     cursor={"pointer"}
                   />
-                  <Flex position="absolute" top={12} right={44} gap={2}>
+                  <Flex
+                    position="absolute"
+                    top={12}
+                    right={44}
+                    gap={2}
+                    display={{ base: "none", md: "flex" }}
+                  >
                     <FiEdit size={28} color="#00a013" cursor={"pointer"} />
                     <Text
                       fontWeight={"bold"}
@@ -173,7 +188,13 @@ const Modal_EditProfile: React.FC = () => {
                     border="4px solid #424242"
                     cursor={"pointer"}
                   />
-                  <Flex position="absolute" top={-6} left={14} gap={2}>
+                  <Flex
+                    position="absolute"
+                    top={-6}
+                    left={14}
+                    gap={2}
+                    display={{ base: "none", md: "block" }}
+                  >
                     <FiEdit size={24} color="#00a013" cursor={"pointer"} />
                   </Flex>
                 </FormLabel>
@@ -293,7 +314,11 @@ const Modal_EditProfile: React.FC = () => {
                 _hover={{ bg: "#028311" }}
                 onClick={handleEdit}
               >
-                Save
+                {loading ? (
+                  <HashLoader color={"#fff"} loading={loading} size={24} />
+                ) : (
+                  "Save"
+                )}
               </Button>
             </FormControl>
           </ModalBody>

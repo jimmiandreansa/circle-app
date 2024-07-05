@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import nav from "../../src/css/home.module.css";
-import { Avatar, Box, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Flex,
+  Heading,
+  Image,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import ArrowBackIcon from "@/assets/iconsSvg/ArrowBackIcon";
 import { useNavigate, useParams } from "react-router-dom";
 import { IThread } from "@/type/app";
@@ -28,8 +36,6 @@ const Page_ThreadDetail = (): React.JSX.Element => {
       const response = await getThreadById(Number(threadId));
       const resReplies = await getReplies(Number(threadId));
 
-      console.log("response", resReplies.data.data);
-
       setThreadDetail(response.data.data);
       setReplies(resReplies.data.data);
     } catch (error) {
@@ -41,11 +47,20 @@ const Page_ThreadDetail = (): React.JSX.Element => {
     fetchThreadDetail();
   }, [threadId]);
 
+  const height = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
+  const width = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
+  const padding = useBreakpointValue({ base: "12px", md: "14px", lg: "16px" });
+  const marginRight = useBreakpointValue({
+    base: "12px",
+    md: "16px",
+    lg: "20px",
+  });
+
   return (
     <Box minHeight={"100vh"} bg={"brand.900"}>
       <div className={nav.navv}>
         <Box
-          padding={{ sm: "16px 16px 8px", lg: "16px 16px 4px"}}
+          padding={{ base: "12px", lg: "16px 16px 4px" }}
           borderLeft={{ base: "1px solid #424242", md: "none" }}
           borderBottom={{ base: "1px solid #424242", md: "none" }}
           pos="relative"
@@ -55,8 +70,8 @@ const Page_ThreadDetail = (): React.JSX.Element => {
         >
           <Heading
             color="white"
-            fontSize="24px"
-            marginTop={{ sm: "none", lg: "8px"}}
+            fontSize={{ base: "18px", md: "22px" }}
+            marginTop={{ base: "none", lg: "8px" }}
             fontWeight="semibold"
             display="flex"
             alignItems="center"
@@ -66,6 +81,7 @@ const Page_ThreadDetail = (): React.JSX.Element => {
               onClick={() => navigate(-1)}
               cursor={"pointer"}
               display={"flex"}
+              alignItems={"center"}
               gap={2}
               _hover={{ textDecoration: "none" }}
             >
@@ -80,7 +96,7 @@ const Page_ThreadDetail = (): React.JSX.Element => {
           flexDir="column"
           borderBottom={"1px solid #424242"}
           color="white"
-          padding="16px"
+          padding={padding}
           width="100%"
         >
           <Flex alignItems="center">
@@ -90,19 +106,29 @@ const Page_ThreadDetail = (): React.JSX.Element => {
                   ? threadDetail.author?.profile?.avatar
                   : ""
               }
-              width="42px"
-              height="42px"
+              // width="42px"
+              // height="42px"
               objectFit={"cover"}
-              borderRadius={"50%"}
-              marginRight={"16px"}
+              borderRadius={"full"}
+              // marginRight={"16px"}
+              style={{ height, width, marginRight }}
             />
             <Flex flexDir="column">
-              <Text fontWeight="semibold">{threadDetail.author?.fullname}</Text>
-              <Text color="grey">@{threadDetail.author?.username}</Text>
+              <Text
+                fontWeight="semibold"
+                fontSize={{ base: "15px", md: "16px", lg: "16px" }}
+              >
+                {threadDetail.author?.fullname}
+              </Text>
+              <Text color="grey" fontSize={{ base: "15px", md: "16px" }}>
+                @{threadDetail.author?.username}
+              </Text>
             </Flex>
           </Flex>
           <Box marginTop={4}>
-            <Text fontSize="15px">{threadDetail.content}</Text>
+            <Text fontSize={{ base: "14px", md: "15px" }}>
+              {threadDetail.content}
+            </Text>
             {threadDetail.image &&
               threadDetail.image.map((image) => (
                 <Image
@@ -142,7 +168,7 @@ const Page_ThreadDetail = (): React.JSX.Element => {
           display={"flex"}
           alignItems={"center"}
           borderBottom={"1px solid #424242"}
-          padding="12px 16px"
+          padding={{ base: "12px", lg: "12px 16px" }}
         >
           <Component_ThreadPost
             threadId={Number(threadId)}

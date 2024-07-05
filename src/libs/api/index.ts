@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export const API = axios.create({
-  baseURL: "https://circle-backend-production.up.railway.app",
+  baseURL: import.meta.env.VITE_BASE_URL,
 });
 
 export function setAuthToken(token: string) {

@@ -33,11 +33,10 @@ const Component_SidebarMobile = (): React.JSX.Element => {
     // },
   ];
 
-  const [threads, setThreads] = useState<IThread[] | []>([]);
+  // const [threads, setThreads] = useState<IThread[] | []>([]);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  console.log(threads);
   const handleLogout = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -47,8 +46,8 @@ const Component_SidebarMobile = (): React.JSX.Element => {
 
   async function getThread() {
     try {
-      const res = await getThreads();
-      setThreads(res.data.data);
+      await getThreads();
+      // setThreads(res.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -62,7 +61,7 @@ const Component_SidebarMobile = (): React.JSX.Element => {
     <Box
       bg={"brand.900"}
       position={"fixed"}
-      padding={"16px"}
+      padding={"12px"}
       height={"100vh"}
       borderRight={"1px solid #424242"}
     >

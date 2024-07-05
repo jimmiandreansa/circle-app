@@ -36,7 +36,7 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
 }) => {
   const isLargeScreen = useBreakpointValue({
     base: false,
-    md: false,
+    md: true,
     lg: true,
   });
 
@@ -94,7 +94,6 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
   };
 
   const handlePost = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("berhasil post");
     e.preventDefault();
     try {
       if (threadId) {
@@ -104,7 +103,7 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
       await createThread(formInput);
 
       if (callback) {
-        await callback();
+        callback();
       }
 
       await dispatch(getThreadAsync());
@@ -152,7 +151,7 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
         onClose={onClose}
       >
         <ModalOverlay />
-        <ModalContent bg="#424242" borderRadius={"12px"}>
+        <ModalContent bg="#424242" borderRadius={"12px"} width={"80%"}>
           <ModalHeader color="white">Create a Post</ModalHeader>
           <ModalCloseButton color="white" />
           <ModalBody pb={6}>
@@ -166,7 +165,7 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
                   maxHeight={"42px"}
                   objectFit={"cover"}
                   borderRadius={"50%"}
-                  marginRight={"20px"}
+                  marginRight={{ base: "8px", md: "20px"}}
                 />
                 <FormControl>
                   <Input

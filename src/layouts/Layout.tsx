@@ -13,13 +13,13 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ isFull }): React.ReactElement => {
   const isLargeScreen = useBreakpointValue({
     base: false,
-    md: false,
+    md: true,
     lg: true,
   });
 
   const paddingLeft = useBreakpointValue({
-    base: "60px",
-    md: "60px",
+    base: "52px",
+    md: 0,
     lg: 0,
   });
 
@@ -34,7 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ isFull }): React.ReactElement => {
         {isLargeScreen ? <Component_Sidebar /> : <Component_SidebarMobile />}
       </Box>
       <Box
-        marginLeft={[0, null, "22%"]}
+        marginLeft={[0, 0, "22%"]}
         width={["100%", "100%", "45%"]}
         style={{ paddingLeft }}
       >

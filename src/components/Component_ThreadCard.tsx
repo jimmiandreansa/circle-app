@@ -1,5 +1,5 @@
 import { IThread } from "@/type/app";
-import { Box, Flex, Image, Text, useBreakpointValue } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Image, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import Component_LikeButton from "./Buttons/Component_LikeButton";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
@@ -7,7 +7,7 @@ import Modal_DeleteThread from "./Modals/Modal_DeleteThread";
 import { formatDistanceToNow } from "date-fns";
 import { TfiCommentAlt } from "react-icons/tfi";
 import { getThreads } from "@/libs/api/call/thread";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getThreadByIdAsync, getThreadReplyAsync } from "@/store/async/thread";
 
 interface IThreadCardProps {
@@ -31,16 +31,12 @@ const Component_ThreadCard: React.FC<IThreadCardProps> = ({
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [threads, setThreads] = useState<IThread[] | []>([]);
-  console.log(threads);
-
   async function getThreadFunc() {
     try {
-      const res = await getThreads();
+      await getThreads();
       if (callback) {
-        await callback();
+        callback();
       }
-      setThreads(res.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -63,7 +59,7 @@ const Component_ThreadCard: React.FC<IThreadCardProps> = ({
       dispatch(getThreadByIdAsync(Number(thread.id)));
       dispatch(getThreadReplyAsync(Number(thread.id)));
     }
-  }, []);
+  }, [dispatch, thread.id]);
 
   const height = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
   const width = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
@@ -79,19 +75,20 @@ const Component_ThreadCard: React.FC<IThreadCardProps> = ({
       borderBottom={"1px solid #424242"}
       width="100%"
       color={"white"}
-      style={{ padding }}
+      style={{ padding, zIndex: -1 }}
     >
-      <Image
+      <Avatar
         src={
           thread.author?.profile?.avatar
             ? thread.author?.profile?.avatar
             : "https://www.iprcenter.gov/image-repository/blank-profile-picture.png/@@images/image.png"
         }
         objectFit={"cover"}
-        borderRadius={"50%"}
+        borderRadius={"full"}
         cursor={isReply ? "default" : "pointer"}
         onClick={threadAuthorDetailFunc}
         style={{ height, width, marginRight }}
+        sx={{zIndex: 0}}
       />
       <Box width={"100%"}>
         <Flex alignItems={"center"} justifyContent="space-between">
@@ -99,7 +96,7 @@ const Component_ThreadCard: React.FC<IThreadCardProps> = ({
             cursor={isReply ? "default" : "pointer"}
             onClick={threadAuthorDetailFunc}
           >
-            <Flex flexDir={{ base: "column" , md: "row"}}>
+            <Flex flexDir={{ base: "column", md: "row" }}>
               <Text
                 fontWeight="semibold"
                 fontSize={{ base: "15px", md: "16px", lg: "16px" }}
@@ -110,14 +107,14 @@ const Component_ThreadCard: React.FC<IThreadCardProps> = ({
                 <Text
                   ms={{ base: 0, md: "2" }}
                   color="grey"
-                  fontSize={{ base: "15px", md: "16px", lg: "16px" }}
+                  fontSize={{ base: "15px", md: "16px" }}
                 >
                   @{thread.author?.username}
                 </Text>
                 <Text
                   ms="2"
                   color="grey"
-                  fontSize={{ base: "15px", md: "16px", lg: "16px" }}
+                  fontSize={{ base: "15px", md: "16px", }}
                 >
                   •{" "}
                   {thread.create
@@ -139,7 +136,7 @@ const Component_ThreadCard: React.FC<IThreadCardProps> = ({
           <Text
             mb={0}
             cursor={isReply ? "default" : "pointer"}
-            fontSize={{ base: "14px", md: "15px", lg: "15px" }}
+            fontSize={{ base: "14px", md: "15px" }}
           >
             {thread.content}
           </Text>

@@ -39,7 +39,7 @@ export const counterSlice = createSlice({
       state,
       action: PayloadAction<{ user?: IProfile; token: string }>
     ) => {
-      console.log("SET_AUTH_CHECK", action.payload);
+      // console.log("SET_AUTH_CHECK", action.payload);
       state.user = action.payload.user;
       state.token = action.payload.token;
     },
@@ -56,7 +56,7 @@ export const counterSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(loginAsync.fulfilled, (state, action) => {
-      console.log(action.payload);
+      // console.log(action.payload);
       state.loading = false;
       state.token = action.payload;
     });
@@ -72,7 +72,7 @@ export const counterSlice = createSlice({
       state.isError = false;
     });
     builder.addCase(registerAsync.fulfilled, (state, action) => {
-      console.log(action.payload);
+      // console.log(action.payload);
       state.loading = false;
       state.isError = false;
     });
@@ -88,7 +88,7 @@ export const counterSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(getProfileAsync.fulfilled, (state, action) => {
-      console.log(action.payload);
+      // console.log(action.payload);
       state.loading = false;
       state.user = action.payload;
     });

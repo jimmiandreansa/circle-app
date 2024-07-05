@@ -1,5 +1,5 @@
-import { Box, Flex, Text, Link, Image } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { Box, Flex, Text, Link, Image, useBreakpointValue } from "@chakra-ui/react";
+import React, { useEffect } from "react";
 import { BiLogOut } from "react-icons/bi";
 import { BsPersonCircle } from "react-icons/bs";
 import { FaHome, FaRegHeart } from "react-icons/fa";
@@ -10,7 +10,6 @@ import { useAppDispatch } from "@/store";
 import { SET_LOGOUT } from "@/store/slice/auth";
 import PostThreadModal from "./Modals/Modal_PostThread";
 import { getThreads } from "@/libs/api/call/thread";
-import { IThread } from "@/type/app";
 
 const Component_Sidebar = (): React.JSX.Element => {
   const MENU = [
@@ -36,11 +35,9 @@ const Component_Sidebar = (): React.JSX.Element => {
     },
   ];
 
-  const [threads, setThreads] = useState<IThread[] | []>([]);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  console.log(threads);
   const handleLogout = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -50,8 +47,7 @@ const Component_Sidebar = (): React.JSX.Element => {
 
   async function getThread() {
     try {
-      const res = await getThreads();
-      setThreads(res.data.data);
+      await getThreads();
     } catch (error) {
       console.log(error);
     }
@@ -60,6 +56,8 @@ const Component_Sidebar = (): React.JSX.Element => {
   useEffect(() => {
     getThread();
   }, []);
+
+  const display = useBreakpointValue({ md: "none", lg: "block" });
 
   return (
     <Box
@@ -90,7 +88,7 @@ const Component_Sidebar = (): React.JSX.Element => {
             src="https://gcdnb.pbrd.co/images/IjucgOcWuO1g.png?o=1"
             alt="Circle Logo"
           />
-          circle
+          <Text display={display}>circle</Text>
         </ChakraLink>
         {MENU.map((menu) => (
           <ChakraLink

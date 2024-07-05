@@ -22,15 +22,12 @@ const Page_Home = (): React.JSX.Element => {
     <Box minHeight="100vh" bg={"brand.900"}>
       <div className={nav.navv}>
         <Box
-          // height={isLargeScreen ? "128px" : "76px"}
           borderBottom={"1px solid #424242"}
           borderLeft={{ base: "1px solid #424242", md: "none" }}
-          // padding="10px"
           pos="relative"
           position={"static"}
           bg={"#1d1d1d"}
-          zIndex={"9999"}
-          style={{padding}}
+          style={{ padding }}
         >
           <Heading
             display={isLargeScreen ? "block" : "none"}

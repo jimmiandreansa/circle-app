@@ -14,7 +14,7 @@ import {
   Input,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { RiImageAddLine } from "react-icons/ri";
 import {
@@ -24,6 +24,8 @@ import {
   TbCircleDashedNumber4,
 } from "react-icons/tb";
 import HashLoader from "react-spinners/HashLoader";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface IThreadPostProps {
   threadId?: number;
@@ -33,31 +35,14 @@ interface IThreadPostProps {
 
 const Component_ThreadPost: React.FC<IThreadPostProps> = ({
   threadId,
-  isComment,
   callback,
 }) => {
   const profile = useAppSelector((state: RootState) => state.auth.user);
   const dispatch = useAppDispatch();
 
-  const { errorMessage, loading } = useAppSelector(
+  const { loading, successMessage } = useAppSelector(
     (state: RootState) => state.thread
   );
-
-  const [visible, setVisible] = useState(false);
-
-  console.log(isComment)
-  console.log(visible)
-
-  useEffect(() => {
-    if (errorMessage) {
-      setVisible(true);
-      const timer = setTimeout(() => {
-        setVisible(false);
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [errorMessage]);
 
   const [formInput, setFormInput] = useState<{
     content: string;
@@ -84,8 +69,7 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
       });
 
       Promise.all(filePromises)
-        .then((results) => {
-          console.log(results);
+        .then(() => {
           setFormInput({
             ...formInput,
             [name]: fileList,
@@ -102,6 +86,8 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
     }
   };
 
+  const notify = () => toast.success(successMessage);
+
   const handlePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -110,9 +96,10 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
       }
 
       await dispatch(createThreadAsync(formInput));
+      notify();
 
       if (callback) {
-        await callback();
+        callback();
       }
 
       await dispatch(getThreadAsync());
@@ -145,7 +132,11 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
 
   return (
     <>
-      <Flex alignItems={"center"} width={"100%"}>
+      <Flex
+        alignItems={"center"}
+        width={"100%"}
+        ml={{ base: "-1px", lg: "0px" }}
+      >
         <Avatar
           src={profile?.avatar ? profile?.avatar : ""}
           objectFit={"cover"}
@@ -263,9 +254,7 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
                 width={"100%"}
                 color="white"
                 size={{ base: "sm", md: "md" }}
-                // padding={"0px, 12px"}
                 _hover={{ bg: "#028311" }}
-                // style={{fontSize}}
               >
                 {loading ? (
                   <HashLoader color={"#fff"} loading={loading} size={24} />
@@ -276,16 +265,8 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
             </FormControl>
           </Flex>
         </form>
+        <ToastContainer position="bottom-right" />
       </Flex>
-      {/* {isComment ? null : (
-        <Box>
-          {visible ? (
-            <Text ml={"60px"} mt={-1} fontSize={"14px"} color={"red"}>
-              {errorMessage}
-            </Text>
-          ) : null}
-        </Box>
-      )} */}
     </>
   );
 };

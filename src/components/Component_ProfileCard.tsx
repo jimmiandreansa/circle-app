@@ -22,8 +22,6 @@ export default function Component_ProfileCard(): React.JSX.Element {
     dispatch(getMyProfileAsync());
   }, []);
 
-  console.log("dsfesfsefsef", profile)
-
   return (
     <Box display="flex" width="100%" height="fit-content">
       <Card

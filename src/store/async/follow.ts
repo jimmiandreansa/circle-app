@@ -6,7 +6,6 @@ export const getFollowingAsync = createAsyncThunk(
   async () => {
     try {
       const res = await getFollowing();
-      console.log("get following", res.data.data)
 
       return res.data.data;
     } catch (error) {

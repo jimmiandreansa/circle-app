@@ -5,6 +5,7 @@ import { getMyThreads } from "@/libs/api/call/thread";
 import {
   Avatar,
   Box,
+  Divider,
   Flex,
   Heading,
   Image,
@@ -15,6 +16,7 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import ArrowBackIcon from "@/assets/iconsSvg/ArrowBackIcon";
 import Component_MyProfilePost from "@/components/MyProfile/Component_MyProfilePost";
@@ -40,12 +42,18 @@ const Page_MyProfile: FC = (): React.JSX.Element => {
     getThreadByUserIdFunc();
   }, []);
 
+  const isLargeScreen = useBreakpointValue({
+    base: false,
+    md: true,
+    lg: true,
+  });
+
   return (
     <Box minHeight={"100vh"} bg={"brand.900"}>
       <Box padding="16px 16px 4px">
         <Heading
           color="white"
-          fontSize="22px"
+          fontSize={isLargeScreen ? "22px" : "20px"}
           marginTop="8px"
           fontWeight="semibold"
           display="flex"
@@ -55,7 +63,7 @@ const Page_MyProfile: FC = (): React.JSX.Element => {
           <Link onClick={() => navigate(-1)}>
             <ArrowBackIcon />
           </Link>
-          {profile?.user.fullname}
+          My Profile
         </Heading>
       </Box>
       <Box width="100%" color="white" padding="8px">
@@ -69,7 +77,7 @@ const Page_MyProfile: FC = (): React.JSX.Element => {
             objectFit={"cover"}
             padding="10px"
             borderRadius="20px"
-            height="140px"
+            height={isLargeScreen ? '140px' : "100px"}
             width="100%"
           />
           <Box
@@ -84,8 +92,8 @@ const Page_MyProfile: FC = (): React.JSX.Element => {
                   ? profile?.avatar
                   : "https://t4.ftcdn.net/jpg/00/65/77/27/360_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"
               }
-              width={"80px"}
-              height={"80px"}
+              width={{base: "74px", md: "80px"}}
+              height={{ base: "75px", md: "80px"}}
               border="5px solid #1d1d1d"
               marginTop={-12}
               marginLeft={4}
@@ -94,12 +102,13 @@ const Page_MyProfile: FC = (): React.JSX.Element => {
           </Box>
         </Box>
         <Box padding="4px 12px 6px 12px">
-          <Text fontWeight={"semibold"} fontSize="20px">
+          <Text fontWeight={"semibold"} fontSize={isLargeScreen ? "20px" : "18px"} marginTop={isLargeScreen ? 0 : 2}>
             {profile?.user.fullname}
           </Text>
           <Text color="gray" mb={2}>
             @{profile?.user.username}
           </Text>
+          <Divider bg={"black"} />
           <Text marginBottom="4px">{profile?.bio}</Text>
           <Box display="flex" gap={4}>
             <Box display="flex" gap={1}>

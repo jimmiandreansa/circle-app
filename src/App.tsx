@@ -1,9 +1,9 @@
 import Home from "@/pages/Page_Home";
-import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import Layout from "./layouts/Layout";
 import "@fontsource/raleway";
 import React, { useEffect } from "react";
-import { SET_AUTH_ERROR, SET_LOGIN } from "./store/slice/auth";
+import { SET_AUTH_CHECK, SET_AUTH_ERROR, SET_LOGIN } from "./store/slice/auth";
 import { getProfile } from "./libs/api/call/profile";
 import Search from "./pages/Page_Search";
 import ForgotPassword from "./pages/Page_ForgotPassword";
@@ -17,9 +17,11 @@ import { useDispatch } from "react-redux";
 import Page_ThreadImageDetail from "./pages/Page_ThreadImageDetail";
 import Page_Login from "./pages/Page_Login";
 import Page_ImageDetail from "./pages/Page_ImageDetail";
+// import { API, setAuthToken } from "./libs/api";
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const checkToken = async () => {
     try {
@@ -27,11 +29,28 @@ const App: React.FC = () => {
       if (!token) return;
       const response = await getProfile();
       dispatch(SET_LOGIN({ user: response.data.data, token }));
+      // dispatch(SET_AUTH_CHECK(response.data.user));
     } catch (error) {
       dispatch(SET_AUTH_ERROR());
-      console.log(error);
+      navigate("/login");
     }
   };
+
+  // async function checkToken() {
+  //   try {
+  //     // const response = await getProfile();
+  //     setAuthToken(localStorage.token);
+  //     const response = await API.get("/auth/check");
+  //     dispatch(SET_AUTH_CHECK(response.data.user));
+  //     // const token = localStorage.getItem("token");
+  //     // if (!token) return;
+  //     // setIsLoading(false)
+  //   } catch (err) {
+  //     dispatch(SET_AUTH_ERROR());
+  //     // setIsLoading(false)
+  //     navigate("/login");
+  //   }
+  // }
 
   useEffect(() => {
     checkToken();

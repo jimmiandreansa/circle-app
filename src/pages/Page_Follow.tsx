@@ -7,18 +7,25 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import nav from "../../src/css/home.module.css";
 import Component_Following from "@/components/Component_Following";
 import Component_Follower from "@/components/Component_Follower";
 
 const Page_Follow = () => {
+  const isLargeScreen = useBreakpointValue({
+    base: false,
+    md: true,
+    lg: true,
+  });
+
   return (
     <Box minHeight={"100vh"} bg={"brand.900"}>
       <div className={nav.navv}>
         <Box
           height="128px"
-          padding="16px"
+          padding={isLargeScreen ? "24px 16px 4px" : "16px"}
           pos="relative"
           position={"static"}
           bg={"#1d1d1d"}
@@ -26,10 +33,11 @@ const Page_Follow = () => {
         >
           <Heading
             color="white"
-            fontSize="24px"
+            fontSize={isLargeScreen ? "22px" : "18px"}
             marginTop="8px"
             marginBottom="12px"
             fontWeight="semibold"
+            textAlign={isLargeScreen ? "left" : "center"}
           >
             Follows
           </Heading>

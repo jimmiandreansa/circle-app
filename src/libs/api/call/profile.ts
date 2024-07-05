@@ -24,7 +24,6 @@ export const updatedProfile = async (body: {
   cover?: File | null | string;
 }) => {
   const formData = new FormData();
-
   if (body.username) {
     formData.append("username", body.username);
   }
@@ -40,14 +39,33 @@ export const updatedProfile = async (body: {
   if (body.cover) {
     formData.append("cover", body.cover);
   }
+  
+  // Check if formData has any entries
+  if (
+    !formData.has("username") &&
+    !formData.has("fullname") &&
+    !formData.has("bio") &&
+    !formData.has("avatar") &&
+    !formData.has("cover")
+  ) {
+    throw new Error("No profile data to update");
+  }
 
-  return await API.patch("profile", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
+  try {
+    const response = await API.patch("profile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    console.log(response.data)
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update profile", error);
+    throw error;
+  }
 };
+
 
 export const getProfileById = async (userId: number) => {
   return await API.get(`detail-profile/${userId}`);

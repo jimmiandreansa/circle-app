@@ -42,7 +42,7 @@ const Page_Home = (): React.JSX.Element => {
           <Component_ThreadPost isComment={false} />
         </Box>
       </div>
-      {threads.map((thread) => (
+      {threads?.map((thread) => (
         <Component_ThreadCard
           key={thread.id}
           thread={thread}

@@ -24,7 +24,6 @@ import Component_FollowButton from "@/components/Buttons/Component_FollowButton"
 
 const Page_ProfileDetail = () => {
   const [profile, setProfile] = useState<IProfile | null>(null);
-  // const [threadUser, setThreadUser] = useState<IThread[]>([]);
   const navigate = useNavigate();
 
   const { userId } = useParams();
@@ -41,7 +40,6 @@ const Page_ProfileDetail = () => {
   const getThreadByUserIdFunc = async () => {
     try {
       await getThreadByUserId(Number(userId));
-      // setThreadUser(res.data.data);
     } catch (error) {
       console.log(error);
     }

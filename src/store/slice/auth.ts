@@ -71,7 +71,7 @@ export const counterSlice = createSlice({
       state.loading = true;
       state.isError = false;
     });
-    builder.addCase(registerAsync.fulfilled, (state, action) => {
+    builder.addCase(registerAsync.fulfilled, (state) => {
       // console.log(action.payload);
       state.loading = false;
       state.isError = false;

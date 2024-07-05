@@ -1,12 +1,12 @@
 import { Box, Flex, Link, Image } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { useAppDispatch } from "@/store";
 import { SET_LOGOUT } from "@/store/slice/auth";
 import PostThreadModal from "./Modals/Modal_PostThread";
 import { getThreads } from "@/libs/api/call/thread";
-import { IThread } from "@/type/app";
+// import { IThread } from "@/type/app";
 import { IoHeartOutline, IoHomeOutline, IoLogOutOutline, IoPersonOutline, IoSearchOutline } from "react-icons/io5";
 
 const Component_SidebarMobile = (): React.JSX.Element => {

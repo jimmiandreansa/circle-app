@@ -3,7 +3,7 @@ import { Navigate, Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import Layout from "./layouts/Layout";
 import "@fontsource/raleway";
 import React, { useEffect } from "react";
-import { SET_AUTH_CHECK, SET_AUTH_ERROR, SET_LOGIN } from "./store/slice/auth";
+import { SET_AUTH_ERROR, SET_LOGIN } from "./store/slice/auth";
 import { getProfile } from "./libs/api/call/profile";
 import Search from "./pages/Page_Search";
 import ForgotPassword from "./pages/Page_ForgotPassword";

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { IProfile, IThread } from "@/type/app";
+import { IProfile } from "@/type/app";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProfileById } from "@/libs/api/call/profile";
 import {

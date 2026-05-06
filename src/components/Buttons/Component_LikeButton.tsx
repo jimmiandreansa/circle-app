@@ -1,11 +1,11 @@
 import {API} from "@/libs/api";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { getMyThreadAsync, getThreadAsync, getThreadByIdAsync } from "@/store/async/thread";
 import { Box } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { GoHeart } from "react-icons/go";
 import { GoHeartFill } from "react-icons/go";
 import { useParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import HashLoader from "react-spinners/HashLoader";
 
 interface ILikeButtonProps {
   threadId: number;
@@ -13,11 +13,11 @@ interface ILikeButtonProps {
 }
 
 const Component_LikeButton: React.FC<ILikeButtonProps> = ({ threadId, callback }) => {
-  const profile = useAppSelector((state) => state.auth.user);
   const [liked, setLiked] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
-  const dispatch = useAppDispatch()
   const { userId } = useParams();
+  const queryClient = useQueryClient();
 
   const getLike = async () => {
     try {
@@ -26,17 +26,15 @@ const Component_LikeButton: React.FC<ILikeButtonProps> = ({ threadId, callback }
       });
 
       setLiked(res.data.data.like === null ? false : true)
-
-      if(callback) {
-        await callback()
-      }
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleLike = async () => {
+    if (loading) return;
     try {
+      setLoading(true);
       const res = await API.post(
         "like",
         {
@@ -53,17 +51,17 @@ const Component_LikeButton: React.FC<ILikeButtonProps> = ({ threadId, callback }
       if (callback) {
         await callback();
       }
-
-      await dispatch(getThreadAsync())
-      if (profile?.id) {
-        await dispatch(getMyThreadAsync(profile.id))
-      }
+      await queryClient.invalidateQueries({ queryKey: ["threads"] });
+      await queryClient.invalidateQueries({ queryKey: ["thread", threadId] });
+      await queryClient.invalidateQueries({ queryKey: ["thread", threadId, "replies"] });
       if (userId) {
-        await dispatch(getThreadByIdAsync(+userId))
+        await queryClient.invalidateQueries({ queryKey: ["user", Number(userId), "threads"] });
       }
 
     } catch(error) {
       console.log(error)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,8 +70,15 @@ const Component_LikeButton: React.FC<ILikeButtonProps> = ({ threadId, callback }
   }, []);
 
   return (
-    <Box onClick={handleLike}>
-      {liked ? (
+    <Box
+      onClick={handleLike}
+      cursor={loading ? "not-allowed" : "pointer"}
+      opacity={loading ? 0.7 : 1}
+      pointerEvents={loading ? "none" : "auto"}
+    >
+      {loading ? (
+        <HashLoader color="#fff" size={18} />
+      ) : liked ? (
         <GoHeartFill style={{ fontSize: "20px", color: "#f31f1f" }} />
       ) : (
         <GoHeart style={{ fontSize: "20px", color: "gray" }} />

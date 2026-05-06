@@ -125,6 +125,7 @@ const Page_Register = () => {
             color="white"
             width="100%"
             _hover={{ bg: "green" }}
+            isDisabled={loading}
           >
             {loading ? (
               <HashLoader color={"#fff"} loading={loading} size={24} />

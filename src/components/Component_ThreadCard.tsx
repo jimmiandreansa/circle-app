@@ -2,13 +2,11 @@ import { IThread } from "@/type/app";
 import { Avatar, Box, Flex, Image, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import Component_LikeButton from "./Buttons/Component_LikeButton";
-import { RootState, useAppDispatch, useAppSelector } from "@/store";
+import { RootState, useAppSelector } from "@/store";
 import Modal_DeleteThread from "./Modals/Modal_DeleteThread";
 import { formatDistanceToNow } from "date-fns";
 import { TfiCommentAlt } from "react-icons/tfi";
 import { getThreads } from "@/libs/api/call/thread";
-import { useEffect } from "react";
-import { getThreadByIdAsync, getThreadReplyAsync } from "@/store/async/thread";
 
 interface IThreadCardProps {
   thread: IThread;
@@ -28,7 +26,6 @@ const Component_ThreadCard: React.FC<IThreadCardProps> = ({
   const profile = useAppSelector((state: RootState) => state.auth.user);
   const myId = profile?.userId;
 
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   async function getThreadFunc() {
@@ -53,13 +50,6 @@ const Component_ThreadCard: React.FC<IThreadCardProps> = ({
       navigate(`../profile/${userId}`);
     }
   }
-
-  useEffect(() => {
-    if (thread.id) {
-      dispatch(getThreadByIdAsync(Number(thread.id)));
-      dispatch(getThreadReplyAsync(Number(thread.id)));
-    }
-  }, [dispatch, thread.id]);
 
   const height = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
   const width = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });

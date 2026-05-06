@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import { store } from "./store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const colors = {
   brand: {
@@ -20,17 +21,27 @@ const fonts = {
 
 const theme = extendTheme({ colors, fonts });
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 30_000,
+    },
+  },
+});
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-      {/* <QueryClientProvider client={queryClient}> */}
+      <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Provider store={store}>
             <App />
             {/* <ToastContainer /> */}
           </Provider>
         </BrowserRouter>
-      {/* </QueryClientProvider> */}
+      </QueryClientProvider>
     </ChakraProvider>
   </React.StrictMode>
 );

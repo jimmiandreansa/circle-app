@@ -1,20 +1,22 @@
-import React, { useEffect } from "react";
+import React from "react";
 import nav from "../../src/css/home.module.css";
 import { Box, Heading, useBreakpointValue } from "@chakra-ui/react";
 import Component_ThreadCard from "@/components/Component_ThreadCard";
 import Component_ThreadPost from "@/components/Component_ThreadPost";
-import { getThreadAsync } from "@/store/async/thread";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useQuery } from "@tanstack/react-query";
+import { getThreads } from "@/libs/api/call/thread";
+import { IThread } from "@/type/app";
+import Component_LoadingSpinner from "@/components/Component_LoadingSpinner";
 
 const Page_Home = (): React.JSX.Element => {
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
-  const threads = useAppSelector((state) => state.thread.threads);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(getThreadAsync());
-  }, []);
+  const threadsQuery = useQuery({
+    queryKey: ["threads"],
+    queryFn: async () => {
+      const res = await getThreads();
+      return res.data.data as IThread[];
+    },
+  });
 
   const padding = useBreakpointValue({ base: "12px", md: "14px", lg: "16px" });
 
@@ -42,15 +44,19 @@ const Page_Home = (): React.JSX.Element => {
           <Component_ThreadPost isComment={false} />
         </Box>
       </div>
-      {threads?.map((thread) => (
-        <Component_ThreadCard
-          key={thread.id}
-          thread={thread}
-          isProfile={false}
-          userId={thread.userId as number}
-          isReply={false}
-        />
-      ))}
+      {threadsQuery.isLoading ? (
+        <Component_LoadingSpinner minH="280px" />
+      ) : (
+        (threadsQuery.data ?? []).map((thread) => (
+          <Component_ThreadCard
+            key={thread.id}
+            thread={thread}
+            isProfile={false}
+            userId={thread.userId as number}
+            isReply={false}
+          />
+        ))
+      )}
     </Box>
   );
 };

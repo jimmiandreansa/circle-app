@@ -1,21 +1,19 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Box, useBreakpointValue } from "@chakra-ui/react";
 import Component_Sidebar from "@/components/Component_Sidebar";
 import Component_ProfileSide from "@/components/Component_ProfileRightSide";
 import Component_Suggested from "@/components/Component_Suggested";
 import Component_SidebarMobile from "@/components/Component_SidebarMobile";
 
-interface LayoutProps {
-  isFull: boolean;
-}
-
-const Layout: React.FC<LayoutProps> = ({ isFull }): React.ReactElement => {
+const Layout: React.FC = (): React.ReactElement => {
   const isLargeScreen = useBreakpointValue({
     base: false,
     md: true,
     lg: true,
   });
+  const location = useLocation();
+  const isMyProfile = location.pathname === "/my-profile";
 
   const paddingLeft = useBreakpointValue({
     base: "52px",
@@ -41,7 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ isFull }): React.ReactElement => {
         <Outlet />
       </Box>
       <Box display={isLargeScreen ? "block" : "none"}>
-        {isFull ? <Component_ProfileSide /> : <Component_Suggested />}
+        {isMyProfile ? <Component_Suggested /> : <Component_ProfileSide />}
       </Box>
     </Box>
   );

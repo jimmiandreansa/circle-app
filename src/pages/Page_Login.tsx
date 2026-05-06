@@ -108,6 +108,7 @@ const Page_Login: React.FC = () => {
             width={"100%"}
             _hover={{ bg: "green" }}
             type={"submit"}
+            isDisabled={loading}
           >
             {loading ? (
               <HashLoader color={"#fff"} loading={loading} size={24} />

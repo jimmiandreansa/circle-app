@@ -16,6 +16,7 @@ import {
   GridItem,
   Avatar,
   useBreakpointValue,
+  Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import ImageIcon from "../../assets/iconsSvg/ImageIcon";
@@ -24,6 +25,8 @@ import { useAppSelector } from "@/store";
 import { useAppDispatch } from "@/store";
 import { getThreadAsync } from "@/store/async/thread";
 import { IoAddCircleOutline } from "react-icons/io5";
+import HashLoader from "react-spinners/HashLoader";
+import { toast, ToastContainer } from "react-toastify";
 
 interface IThreadPostProps {
   threadId?: number;
@@ -47,6 +50,7 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
   const profile = useAppSelector((state) => state.auth.user);
 
   const dispatch = useAppDispatch();
+  const [posting, setPosting] = useState(false);
 
   const [formInput, setFormInput] = useState<{
     content: string;
@@ -95,12 +99,15 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
 
   const handlePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (posting) return;
     try {
+      setPosting(true);
       if (threadId) {
         formInput.threadId = threadId;
       }
 
       await createThread(formInput);
+      toast.success("Posted successfully!");
 
       if (callback) {
         callback();
@@ -119,6 +126,9 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
       setPreviewImages([]);
     } catch (error) {
       console.log(error);
+      toast.error("Failed to post. Please try again.");
+    } finally {
+      setPosting(false);
     }
   };
 
@@ -214,10 +224,16 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
                   borderRadius="30px"
                   color="white"
                   _hover={{ bg: "#028311" }}
+                  isDisabled={posting}
                 >
-                  Post
+                  {posting ? <HashLoader color="#fff" size={18} /> : "Post"}
                 </Button>
               </Flex>
+              {posting && formInput.image ? (
+                <Text mt={2} color="white" fontSize="14px">
+                  Uploading image...
+                </Text>
+              ) : null}
             </form>
             {previewImages.length > 0 && (
               <Flex mt={4}>
@@ -241,6 +257,7 @@ const Modal_PostThread: React.FC<IThreadPostProps> = ({
           </ModalBody>
         </ModalContent>
       </Modal>
+      <ToastContainer position="bottom-right" />
     </>
   );
 };

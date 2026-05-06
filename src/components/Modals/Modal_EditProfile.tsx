@@ -1,4 +1,4 @@
-import { RootState, useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import {
   Avatar,
   Box,
@@ -25,6 +25,7 @@ import { getThreadAsync } from "@/store/async/thread";
 import { getMyProfileAsync } from "@/store/async/profile";
 import { FiEdit } from "react-icons/fi";
 import HashLoader from "react-spinners/HashLoader";
+import { toast, ToastContainer } from "react-toastify";
 
 const Modal_EditProfile: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,9 +35,7 @@ const Modal_EditProfile: React.FC = () => {
   const profile = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
 
-  const { loading } = useAppSelector((state: RootState) => state.profile);
-
-  console.log("ini lpading", loading);
+  const [saving, setSaving] = useState(false);
 
   const [updateProfile, setUpdateProfile] = useState<{
     username: string;
@@ -63,8 +62,11 @@ const Modal_EditProfile: React.FC = () => {
   const handleEdit = async (e: React.MouseEvent) => {
     try {
       e.preventDefault();
+      if (saving) return;
+      setSaving(true);
 
       await updatedProfile(updateProfile);
+      toast.success("Profile updated!");
 
       setUpdateProfile(updateProfile);
       await dispatch(getThreadAsync());
@@ -73,6 +75,9 @@ const Modal_EditProfile: React.FC = () => {
       onClose();
     } catch (error) {
       console.log(error);
+      toast.error("Failed to update profile.");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -313,17 +318,24 @@ const Modal_EditProfile: React.FC = () => {
                 color="white"
                 _hover={{ bg: "#028311" }}
                 onClick={handleEdit}
+                isDisabled={saving}
               >
-                {loading ? (
-                  <HashLoader color={"#fff"} loading={loading} size={24} />
+                {saving ? (
+                  <HashLoader color={"#fff"} loading={saving} size={24} />
                 ) : (
                   "Save"
                 )}
               </Button>
             </FormControl>
+            {saving && (updateProfile.avatar || updateProfile.cover) ? (
+              <Text mt={2} color="white" fontSize="14px" textAlign="right">
+                Uploading image...
+              </Text>
+            ) : null}
           </ModalBody>
         </ModalContent>
       </Modal>
+      <ToastContainer position="bottom-right" />
     </>
   );
 };

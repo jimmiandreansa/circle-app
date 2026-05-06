@@ -1,11 +1,10 @@
 import { Box, Flex, Link, Image } from "@chakra-ui/react";
-import React, { useEffect } from "react";
-import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link as ReactRouterLink, useLocation, useNavigate } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { useAppDispatch } from "@/store";
 import { SET_LOGOUT } from "@/store/slice/auth";
 import PostThreadModal from "./Modals/Modal_PostThread";
-import { getThreads } from "@/libs/api/call/thread";
 // import { IThread } from "@/type/app";
 import {
   IoHeartOutline,
@@ -15,6 +14,7 @@ import {
   IoSearchOutline,
 } from "react-icons/io5";
 import LogoCircle from "@/assets/images/circle.png";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Component_SidebarMobile = (): React.JSX.Element => {
   const MENU = [
@@ -43,6 +43,8 @@ const Component_SidebarMobile = (): React.JSX.Element => {
   // const [threads, setThreads] = useState<IThread[] | []>([]);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
+  const location = useLocation();
 
   const handleLogout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,18 +53,9 @@ const Component_SidebarMobile = (): React.JSX.Element => {
     navigate("/login");
   };
 
-  async function getThread() {
-    try {
-      await getThreads();
-      // setThreads(res.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useEffect(() => {
-    getThread();
-  }, []);
+  const invalidateThreads = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["threads"] });
+  };
 
   return (
     <Box
@@ -76,6 +69,9 @@ const Component_SidebarMobile = (): React.JSX.Element => {
         <ChakraLink
           as={ReactRouterLink}
           to="/"
+          onClick={(e) => {
+            if (location.pathname === "/") e.preventDefault();
+          }}
           alignItems={"center"}
           fontWeight={"bold"}
           color="#028311"
@@ -89,6 +85,9 @@ const Component_SidebarMobile = (): React.JSX.Element => {
             key={menu.link}
             as={ReactRouterLink}
             to={menu.link}
+            onClick={(e) => {
+              if (location.pathname === menu.link) e.preventDefault();
+            }}
             display={"flex"}
             alignItems={"center"}
             fontWeight={"semibold"}
@@ -100,7 +99,7 @@ const Component_SidebarMobile = (): React.JSX.Element => {
           </ChakraLink>
         ))}
 
-        <PostThreadModal callback={getThread} />
+        <PostThreadModal callback={invalidateThreads} />
         <Link
           display={"flex"}
           alignItems={"center"}

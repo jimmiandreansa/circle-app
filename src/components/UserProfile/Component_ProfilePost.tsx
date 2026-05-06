@@ -1,34 +1,38 @@
-import { useEffect, useState } from "react";
 import { IThread } from "@/type/app";
 import Component_ThreadCard from "../Component_ThreadCard";
 import { useParams } from "react-router-dom";
 import { getThreadByUserId } from "@/libs/api/call/thread";
+import { useQuery } from "@tanstack/react-query";
+import Component_LoadingSpinner from "../Component_LoadingSpinner";
 
 const Component_ProfilePost = () => {
-  const [threadUser, setThreadUser] = useState([]);
   const { userId } = useParams();
+  const numericUserId = Number(userId);
 
-  const getThreadByUserIdFunc = async () => {
-    try {
-      const res = await getThreadByUserId(Number(userId));
-      setThreadUser(res.data.data);
-    } catch (error) { 
-      console.log(error);
-    }
+  const threadsQuery = useQuery({
+    queryKey: ["user", numericUserId, "threads"],
+    enabled: Number.isFinite(numericUserId) && numericUserId > 0,
+    queryFn: async () => {
+      const res = await getThreadByUserId(numericUserId);
+      return res.data.data as IThread[];
+    },
+  });
+
+  const refetchThreads = async () => {
+    await threadsQuery.refetch();
   };
 
-  useEffect(() => {
-    getThreadByUserIdFunc();
-  }, []);
+  if (threadsQuery.isLoading) return <Component_LoadingSpinner minH="220px" />;
+
   return (
     <>
-      {threadUser?.map((post: IThread) => (
+      {(threadsQuery.data ?? []).map((post: IThread) => (
         <Component_ThreadCard
           thread={post}
           isProfile={true}
-          userId={Number(userId)}
+          userId={numericUserId}
           isReply={false}
-          callback={getThreadByUserIdFunc}
+          callback={refetchThreads}
         />
       ))}
     </>

@@ -14,6 +14,7 @@ import { GoTrash } from "react-icons/go";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { getMyProfileAsync } from "@/store/async/profile";
 import { getMyThreadAsync } from "@/store/async/thread";
+import HashLoader from "react-spinners/HashLoader";
 
 interface IThreadPostProps {
   threadId?: number;
@@ -24,11 +25,14 @@ const Modal_DeleteThread: React.FC<IThreadPostProps> = ({ threadId }) => {
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = React.useState(false);
 
   const profile = useAppSelector((state) => state.auth.user);
 
   const handleDeleteThread = async () => {
+    if (loading) return;
     try {
+      setLoading(true);
       await deleteThread(Number(threadId));
       await dispatch(getMyProfileAsync());
       if (profile?.id) {
@@ -38,6 +42,8 @@ const Modal_DeleteThread: React.FC<IThreadPostProps> = ({ threadId }) => {
       onClose();
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,8 +81,9 @@ const Modal_DeleteThread: React.FC<IThreadPostProps> = ({ threadId }) => {
               color="white"
               _hover={{ bg: "#c51111" }}
               onClick={handleDeleteThread}
+              isDisabled={loading}
             >
-              Delete now
+              {loading ? <HashLoader color="#fff" size={18} /> : "Delete now"}
             </Button>
           </ModalBody>
         </ModalContent>

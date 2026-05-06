@@ -1,16 +1,16 @@
 import { Box, Flex, Text, Link, Image, useBreakpointValue } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React from "react";
 import { BiLogOut } from "react-icons/bi";
 import { BsPersonCircle } from "react-icons/bs";
 import { FaHome, FaRegHeart } from "react-icons/fa";
 import { MdPersonSearch } from "react-icons/md";
-import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
+import { Link as ReactRouterLink, useLocation, useNavigate } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { useAppDispatch } from "@/store";
 import { SET_LOGOUT } from "@/store/slice/auth";
 import PostThreadModal from "./Modals/Modal_PostThread";
-import { getThreads } from "@/libs/api/call/thread";
 import LogoCircle from "@/assets/images/circle.png";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Component_Sidebar = (): React.JSX.Element => {
   const MENU = [
@@ -38,6 +38,8 @@ const Component_Sidebar = (): React.JSX.Element => {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
+  const location = useLocation();
 
   const handleLogout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,17 +48,9 @@ const Component_Sidebar = (): React.JSX.Element => {
     navigate("/login");
   };
 
-  async function getThread() {
-    try {
-      await getThreads();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useEffect(() => {
-    getThread();
-  }, []);
+  const invalidateThreads = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["threads"] });
+  };
 
   const display = useBreakpointValue({ md: "none", lg: "block" });
 
@@ -75,6 +69,9 @@ const Component_Sidebar = (): React.JSX.Element => {
         <ChakraLink
           as={ReactRouterLink}
           to="/"
+          onClick={(e) => {
+            if (location.pathname === "/") e.preventDefault();
+          }}
           ml={"12px"}
           display={"flex"}
           gap={2}
@@ -96,6 +93,9 @@ const Component_Sidebar = (): React.JSX.Element => {
             key={menu.title}
             as={ReactRouterLink}
             to={menu.link}
+            onClick={(e) => {
+              if (location.pathname === menu.link) e.preventDefault();
+            }}
             ml={"12px"}
             display={"flex"}
             alignItems={"center"}
@@ -108,7 +108,7 @@ const Component_Sidebar = (): React.JSX.Element => {
             <Text marginLeft={"8px"}>{menu.title}</Text>
           </ChakraLink>
         ))}
-        <PostThreadModal callback={getThread} />
+        <PostThreadModal callback={invalidateThreads} />
       </Flex>
       <Box position={"absolute"} bottom={"32px"}>
         <Link

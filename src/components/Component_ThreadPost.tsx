@@ -1,8 +1,6 @@
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
 import {
   createThreadAsync,
-  getThreadAsync,
-  getThreadReplyAsync,
 } from "@/store/async/thread";
 import {
   Avatar,
@@ -26,6 +24,7 @@ import {
 import HashLoader from "react-spinners/HashLoader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface IThreadPostProps {
   threadId?: number;
@@ -39,8 +38,9 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
 }) => {
   const profile = useAppSelector((state: RootState) => state.auth.user);
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
 
-  const { loading, successMessage } = useAppSelector(
+  const { loading } = useAppSelector(
     (state: RootState) => state.thread
   );
 
@@ -86,8 +86,6 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
     }
   };
 
-  const notify = () => toast.success(successMessage);
-
   const handlePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -95,15 +93,21 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
         formInput.threadId = threadId;
       }
 
-      await dispatch(createThreadAsync(formInput));
-      notify();
+      const action = await dispatch(createThreadAsync(formInput));
+      if (action.meta.requestStatus === "fulfilled") {
+        toast.success("Posted successfully!");
+      } else {
+        toast.error("Failed to post. Please try again.");
+      }
 
       if (callback) {
         callback();
       }
-
-      await dispatch(getThreadAsync());
-      await dispatch(getThreadReplyAsync(threadId!));
+      await queryClient.invalidateQueries({ queryKey: ["threads"] });
+      if (threadId) {
+        await queryClient.invalidateQueries({ queryKey: ["thread", threadId, "replies"] });
+        await queryClient.invalidateQueries({ queryKey: ["thread", threadId] });
+      }
 
       setFormInput({
         ...formInput,
@@ -112,6 +116,7 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
       });
     } catch (error) {
       console.log(error);
+      toast.error("Failed to post. Please try again.");
     }
   };
 
@@ -255,6 +260,7 @@ const Component_ThreadPost: React.FC<IThreadPostProps> = ({
                 color="white"
                 size={{ base: "sm", md: "md" }}
                 _hover={{ bg: "#028311" }}
+                isDisabled={loading}
               >
                 {loading ? (
                   <HashLoader color={"#fff"} loading={loading} size={24} />

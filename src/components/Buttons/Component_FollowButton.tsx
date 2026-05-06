@@ -6,6 +6,7 @@ import { getMyProfileAsync } from "@/store/async/profile";
 import { getUserSuggestAsync } from "@/store/async/user";
 import { Box, Button } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import HashLoader from "react-spinners/HashLoader";
 
 interface IFollowButtonProps {
   followingId: number;
@@ -16,11 +17,14 @@ const Component_FollowButton: React.FC<IFollowButtonProps> = ({
 }) => {
   const [postFollow, setPostFollow] = useState<boolean>(false);
   const [followTrigger, setFollowTrigger] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useAppDispatch();
 
   const handleFollow = async () => {
+    if (loading) return;
     try {
+      setLoading(true);
       await follow(followingId);
       setFollowTrigger(!followTrigger);
 
@@ -30,6 +34,8 @@ const Component_FollowButton: React.FC<IFollowButtonProps> = ({
       await dispatch(getUserSuggestAsync());
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,8 +70,15 @@ const Component_FollowButton: React.FC<IFollowButtonProps> = ({
         height={"32px"}
         _hover={{ backgroundColor: "#028311", color: "#c0c0c0" }}
         onClick={handleFollow}
+        isDisabled={loading}
       >
-        {postFollow ? "Unfollow" : "Follow"}
+        {loading ? (
+          <HashLoader color="#fff" size={18} />
+        ) : postFollow ? (
+          "Unfollow"
+        ) : (
+          "Follow"
+        )}
       </Button>
     </Box>
   );

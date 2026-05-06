@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import nav from "../../src/css/home.module.css";
 import {
   Avatar,
@@ -18,34 +18,36 @@ import Component_ThreadCard from "@/components/Component_ThreadCard";
 import Component_LikeButton from "@/components/Buttons/Component_LikeButton";
 import { format } from "date-fns";
 import { TfiCommentAlt } from "react-icons/tfi";
+import { useQuery } from "@tanstack/react-query";
+import Component_LoadingSpinner from "@/components/Component_LoadingSpinner";
 
 const Page_ThreadDetail = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { threadId } = useParams();
 
-  const [threadDetail, setThreadDetail] = useState<IThread>({
-    userId: 0,
-    content: "",
-    image: [],
-    id: 0,
+  const numericThreadId = Number(threadId);
+
+  const threadQuery = useQuery({
+    queryKey: ["thread", numericThreadId],
+    enabled: Number.isFinite(numericThreadId) && numericThreadId > 0,
+    queryFn: async () => {
+      const res = await getThreadById(numericThreadId);
+      return res.data.data as IThread;
+    },
   });
-  const [replies, setReplies] = useState<IThread[]>([]);
 
-  const fetchThreadDetail = async () => {
-    try {
-      const response = await getThreadById(Number(threadId));
-      const resReplies = await getReplies(Number(threadId));
+  const repliesQuery = useQuery({
+    queryKey: ["thread", numericThreadId, "replies"],
+    enabled: Number.isFinite(numericThreadId) && numericThreadId > 0,
+    queryFn: async () => {
+      const res = await getReplies(numericThreadId);
+      return res.data.data as IThread[];
+    },
+  });
 
-      setThreadDetail(response.data.data);
-      setReplies(resReplies.data.data);
-    } catch (error) {
-      console.log(error);
-    }
+  const refetchAll = async () => {
+    await Promise.all([threadQuery.refetch(), repliesQuery.refetch()]);
   };
-
-  useEffect(() => {
-    fetchThreadDetail();
-  }, [threadId]);
 
   const height = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
   const width = useBreakpointValue({ base: "36px", md: "40px", lg: "42px" });
@@ -91,7 +93,10 @@ const Page_ThreadDetail = (): React.JSX.Element => {
           </Heading>
         </Box>
       </div>
-      <>
+      {threadQuery.isLoading || repliesQuery.isLoading ? (
+        <Component_LoadingSpinner minH="240px" />
+      ) : (
+        <>
         <Flex
           flexDir="column"
           borderBottom={"1px solid #424242"}
@@ -102,8 +107,8 @@ const Page_ThreadDetail = (): React.JSX.Element => {
           <Flex alignItems="center">
             <Avatar
               src={
-                threadDetail.author?.profile?.avatar
-                  ? threadDetail.author?.profile?.avatar
+                threadQuery.data?.author?.profile?.avatar
+                  ? threadQuery.data?.author?.profile?.avatar
                   : ""
               }
               // width="42px"
@@ -118,19 +123,19 @@ const Page_ThreadDetail = (): React.JSX.Element => {
                 fontWeight="semibold"
                 fontSize={{ base: "15px", md: "16px", lg: "16px" }}
               >
-                {threadDetail.author?.fullname}
+                {threadQuery.data?.author?.fullname}
               </Text>
               <Text color="grey" fontSize={{ base: "15px", md: "16px" }}>
-                @{threadDetail.author?.username}
+                @{threadQuery.data?.author?.username}
               </Text>
             </Flex>
           </Flex>
           <Box marginTop={4}>
             <Text fontSize={{ base: "14px", md: "15px" }}>
-              {threadDetail.content}
+              {threadQuery.data?.content}
             </Text>
-            {threadDetail.image &&
-              threadDetail.image.map((image) => (
+            {threadQuery.data?.image &&
+              threadQuery.data?.image.map((image) => (
                 <Image
                   src={image.image}
                   mt={3}
@@ -141,23 +146,23 @@ const Page_ThreadDetail = (): React.JSX.Element => {
                 />
               ))}
             <Text color="gray" fontSize="14px" mt={2} mb={2}>
-              {threadDetail.create
-                ? format(new Date(threadDetail.create), "dd MMMM yyyy")
+              {threadQuery.data?.create
+                ? format(new Date(threadQuery.data.create), "dd MMMM yyyy")
                 : ""}
             </Text>
             <Flex gap={6} marginTop={"0"}>
               <Flex gap={6} marginTop={"0"}>
                 <Flex gap={2} alignItems="center" cursor={"pointer"}>
                   <Component_LikeButton
-                    threadId={threadDetail.id as number}
-                    callback={fetchThreadDetail}
+                    threadId={threadQuery.data?.id as number}
+                    callback={refetchAll}
                   />
-                  <Text color="#858585">{threadDetail._count?.like}</Text>
+                  <Text color="#858585">{threadQuery.data?._count?.like}</Text>
                 </Flex>
                 <Flex gap={2} alignItems={"center"}>
                   <TfiCommentAlt style={{ fontSize: "18px", color: "gray" }} />
                   <Text color="#858585">
-                    {threadDetail._count?.replies} Reply
+                    {threadQuery.data?._count?.replies} Reply
                   </Text>
                 </Flex>
               </Flex>
@@ -171,22 +176,23 @@ const Page_ThreadDetail = (): React.JSX.Element => {
           padding={{ base: "12px", lg: "12px 16px" }}
         >
           <Component_ThreadPost
-            threadId={Number(threadId)}
+            threadId={numericThreadId}
             isComment={true}
-            callback={fetchThreadDetail}
+            callback={refetchAll}
           />
         </Box>
-        {replies.map((reply) => (
+        {(repliesQuery.data ?? []).map((reply) => (
           <Component_ThreadCard
             key={reply.id}
             thread={reply}
             isProfile={false}
             userId={reply.id!}
             isReply={true}
-            callback={fetchThreadDetail}
+            callback={refetchAll}
           />
         ))}
-      </>
+        </>
+      )}
     </Box>
   );
 };

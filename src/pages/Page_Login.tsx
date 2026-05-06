@@ -13,13 +13,14 @@ import { useState } from "react";
 import { getProfileAsync, loginAsync } from "@/store/async/auth";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
 import HashLoader from "react-spinners/HashLoader";
+import LogoCircle from "@/assets/images/circle.png";
 
 const Page_Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const { errorMessage, loading } = useAppSelector(
-    (state: RootState) => state.auth
+    (state: RootState) => state.auth,
   );
 
   const [formInput, setFormInput] = useState<{
@@ -52,11 +53,7 @@ const Page_Login: React.FC = () => {
         margin={"auto"}
       >
         <Heading color="#00a013" display={"flex"} gap={1} alignItems={"center"}>
-          <Image
-            boxSize="28px"
-            src="https://gcdnb.pbrd.co/images/IjucgOcWuO1g.png?o=1"
-            alt="Circle Logo"
-          />
+          <Image boxSize="28px" src={LogoCircle} alt="Circle Logo" />
           circle
         </Heading>
         <Text color={"white"} fontSize={"20px"} marginBottom={3}>

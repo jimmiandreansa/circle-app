@@ -10,6 +10,7 @@ import { useAppDispatch } from "@/store";
 import { SET_LOGOUT } from "@/store/slice/auth";
 import PostThreadModal from "./Modals/Modal_PostThread";
 import { getThreads } from "@/libs/api/call/thread";
+import LogoCircle from "@/assets/images/circle.png";
 
 const Component_Sidebar = (): React.JSX.Element => {
   const MENU = [
@@ -85,7 +86,7 @@ const Component_Sidebar = (): React.JSX.Element => {
         >
           <Image
             boxSize="48px"
-            src="https://gcdnb.pbrd.co/images/IjucgOcWuO1g.png?o=1"
+            src={LogoCircle}
             alt="Circle Logo"
           />
           <Text display={display}>circle</Text>

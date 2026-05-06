@@ -7,7 +7,14 @@ import { SET_LOGOUT } from "@/store/slice/auth";
 import PostThreadModal from "./Modals/Modal_PostThread";
 import { getThreads } from "@/libs/api/call/thread";
 // import { IThread } from "@/type/app";
-import { IoHeartOutline, IoHomeOutline, IoLogOutOutline, IoPersonOutline, IoSearchOutline } from "react-icons/io5";
+import {
+  IoHeartOutline,
+  IoHomeOutline,
+  IoLogOutOutline,
+  IoPersonOutline,
+  IoSearchOutline,
+} from "react-icons/io5";
+import LogoCircle from "@/assets/images/circle.png";
 
 const Component_SidebarMobile = (): React.JSX.Element => {
   const MENU = [
@@ -75,11 +82,7 @@ const Component_SidebarMobile = (): React.JSX.Element => {
           fontSize={"52px"}
           _hover={{ textDecoration: "none" }}
         >
-          <Image
-            boxSize="28px"
-            src="https://gcdnb.pbrd.co/images/IjucgOcWuO1g.png?o=1"
-            alt="Circle Logo"
-          />
+          <Image boxSize="28px" src={LogoCircle} alt="Circle Logo" />
         </ChakraLink>
         {MENU.map((menu) => (
           <ChakraLink

@@ -8,6 +8,7 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
+import LogoCircle from "@/assets/images/circle.png";
 
 const Page_ResetPassword = () => {
   return (
@@ -20,11 +21,7 @@ const Page_ResetPassword = () => {
         margin="auto"
       >
         <Heading color="#00a013" display={"flex"} gap={1} alignItems={"center"}>
-          <Image
-            boxSize="28px"
-            src="https://gcdnb.pbrd.co/images/IjucgOcWuO1g.png?o=1"
-            alt="Circle Logo"
-          />
+          <Image boxSize="28px" src={LogoCircle} alt="Circle Logo" />
           circle
         </Heading>
         <Text color="white" fontSize={"20px"} marginBottom={3}>
@@ -60,4 +57,4 @@ const Page_ResetPassword = () => {
   );
 };
 
-export default Page_ResetPassword
+export default Page_ResetPassword;

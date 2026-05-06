@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
+import LogoCircle from "@/assets/images/circle.png";
 
 const Page_ForgotPassword = () => {
   return (
@@ -24,7 +25,7 @@ const Page_ForgotPassword = () => {
         <Heading color="#00a013" display={"flex"} gap={1} alignItems={"center"}>
           <Image
             boxSize="28px"
-            src="https://gcdnb.pbrd.co/images/IjucgOcWuO1g.png?o=1"
+            src={LogoCircle}
             alt="Circle Logo"
           />
           circle

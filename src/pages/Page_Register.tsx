@@ -5,6 +5,7 @@ import { useState } from "react";
 import { registerAsync } from "@/store/async/auth";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
 import HashLoader from "react-spinners/HashLoader";
+import LogoCircle from "@/assets/images/circle.png";
 
 const Page_Register = () => {
   const dispatch = useAppDispatch();
@@ -52,7 +53,7 @@ const Page_Register = () => {
         <Heading color="#00a013" display={"flex"} gap={1} alignItems={"center"}>
           <Image
             boxSize="28px"
-            src="https://gcdnb.pbrd.co/images/IjucgOcWuO1g.png?o=1"
+            src={LogoCircle}
             alt="Circle Logo"
           />
           circle
